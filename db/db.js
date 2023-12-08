@@ -1,11 +1,11 @@
 // db.js
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Replace 'your_database_uri' with your actual MongoDB connection string
-const MONGODB_URI =
-  "mongodb+srv://nikhil:nikhil@dashboard-cluster.9t93x8a.mongodb.net/task";
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB");

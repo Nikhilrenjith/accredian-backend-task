@@ -4,8 +4,13 @@ const bodyParser = require("body-parser");
 const User = require("./db/userModel");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -68,9 +73,11 @@ app.post("/api/login", async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    // You can generate a token here and send it back to the client for authentication
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1h",
+    });
 
-    res.json({ success: true, message: "Login successful" });
+    res.json({ success: true, message: "Login successful", token });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
